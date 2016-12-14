@@ -20,10 +20,12 @@ int main(int argc, char** argv)
 	std::stringstream ss;
 	std::string fileid = "2016_0221_043318";
 	
-	_mkdir(fileid.c_str());
-	_mkdir("depth");
-	// _mkdir("color");
-	// cv::namedWindow("depth");
+	std::string filepath = fileid;
+	_mkdir(filepath.c_str());
+	filepath = fileid + "//depth";
+	_mkdir(filepath.c_str());
+	filepath = fileid + "//color";
+	_mkdir(filepath.c_str());
 
 	while (1) {
 		dpm.updateDepthFrame();
@@ -36,7 +38,7 @@ int main(int argc, char** argv)
 		dpm.updateDepthFrame();
 	    now_time_stamp = dpm.getTimeStamp();
 		if (now_time_stamp - past_time_stamp > 0) {
-			std::string filename = fileid + "//" + std::to_string(now_time_stamp) + ".bmp";
+			std::string filename = fileid + "//depth//" + std::to_string(now_time_stamp) + ".bmp";
 			cv::imwrite(filename, dpm.getDepthMatRaw());
 			past_time_stamp = now_time_stamp;
 		}
