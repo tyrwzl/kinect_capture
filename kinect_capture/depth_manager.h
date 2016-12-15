@@ -15,6 +15,7 @@ public:
 
 	cv::Mat getDepthMatRaw();
 	cv::Mat getDepthMatConverted();
+	std::vector<UINT16> getDepthVector();
 
 	int getDepthWidth();
 	int getDepthHeight();
@@ -33,6 +34,8 @@ private:
 
 	cv::Mat depth_mat_raw;
 	cv::Mat depth_mat_converted;
+
+	std::vector<UINT16> depth_vector;
 
 	TIMESPAN time_stamp;
 

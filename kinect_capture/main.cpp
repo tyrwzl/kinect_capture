@@ -3,6 +3,7 @@
 #include <direct.h>
 
 #include "depth_manager.h"
+#include "color_manager.h"
 
 bool isZeroMat(cv::Mat &DepthMat)
 {
@@ -15,12 +16,12 @@ bool isZeroMat(cv::Mat &DepthMat)
 
 int main(int argc, char** argv)
 {
-	DepthManager dpm;
-	//cv::Mat depth_raw(cv::Size(dpm.getDepthWidth(), dpm.getDepthHeight()), CV_16UC1);
-	std::stringstream ss;
-	std::string fileid = "2016_0221_043318";
-	
+	DepthManager depth_manager;
+	ColorManager color_manager(depth_manager.getDepthHeight(), depth_manager.getDepthWidth());
+
+	std::string fileid = "2016_0221_044537";
 	std::string filepath = fileid;
+
 	_mkdir(filepath.c_str());
 	filepath = fileid + "//depth";
 	_mkdir(filepath.c_str());
@@ -28,21 +29,24 @@ int main(int argc, char** argv)
 	_mkdir(filepath.c_str());
 
 	while (1) {
-		dpm.updateDepthFrame();
-		if (dpm.getTimeStamp() > 0) break;
+		depth_manager.updateDepthFrame();
+		if (depth_manager.getTimeStamp() > 0) break;
 	}
 
 	int64 now_time_stamp, past_time_stamp = 0;
 
 	while (1) {
-		dpm.updateDepthFrame();
-	    now_time_stamp = dpm.getTimeStamp();
+		depth_manager.updateDepthFrame();
+		color_manager.updateColorFrame(depth_manager.getDepthVector());
+	    now_time_stamp = depth_manager.getTimeStamp();
 		if (now_time_stamp - past_time_stamp > 0) {
 			std::string filename = fileid + "//depth//" + std::to_string(now_time_stamp) + ".bmp";
-			cv::imwrite(filename, dpm.getDepthMatRaw());
+			cv::imwrite(filename, depth_manager.getDepthMatRaw());
+			filename = fileid + "//color//" + std::to_string(now_time_stamp) + ".bmp";
+			cv::imwrite(filename, color_manager.getCoordinatedMat());
 			past_time_stamp = now_time_stamp;
 		}
-		if (isZeroMat(dpm.getDepthMatConverted())) break;
+		if (isZeroMat(depth_manager.getDepthMatConverted())) break;
 		if (cv::waitKey(10) == 'q') break;
 	}
 	
