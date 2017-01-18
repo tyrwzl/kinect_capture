@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 	DepthManager depth_manager;
 	ColorManager color_manager(depth_manager.getDepthHeight(), depth_manager.getDepthWidth());
 
-	std::string fileid = "2016_0221_044537";
+	std::string fileid = "2016_0221_043318";
 	std::string filepath = fileid;
 
 	_mkdir(filepath.c_str());
@@ -42,8 +42,9 @@ int main(int argc, char** argv)
 		if (now_time_stamp - past_time_stamp > 0) {
 			std::string filename = fileid + "//depth//" + std::to_string(now_time_stamp) + ".bmp";
 			cv::imwrite(filename, depth_manager.getDepthMatRaw());
-			filename = fileid + "//color//" + std::to_string(now_time_stamp) + ".bmp";
-			cv::imwrite(filename, color_manager.getCoordinatedMat());
+			//saveMatBinary(filename, depth_manager.getDepthMatRaw());
+			//filename = fileid + "//color//" + std::to_string(now_time_stamp) + ".png";
+			//cv::imwrite(filename, color_manager.getCoordinatedMat());
 			past_time_stamp = now_time_stamp;
 		}
 		if (isZeroMat(depth_manager.getDepthMatConverted())) break;

@@ -52,9 +52,9 @@ void DepthManager::updateDepthFrame(){
 	depthFrame->Release();
 }
 
-cv::Mat DepthManager::getDepthMatRaw() {
-    return depth_mat_raw;
-}
+//cv::Mat DepthManager::getDepthMatRaw() {
+//    return depth_mat_raw;
+//}
 
 cv::Mat DepthManager::getDepthMatConverted()
 {

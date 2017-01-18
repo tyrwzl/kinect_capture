@@ -2,6 +2,7 @@
 #include <opencv2/opencv.hpp>
 #include <Windows.h>
 #include <kinect.h>
+#include <memory>
 
 
 class DepthManager
@@ -13,7 +14,10 @@ public:
 
 	void updateDepthFrame();
 
-	cv::Mat getDepthMatRaw();
+	const cv::Mat& getDepthMatRaw() const {
+		return depth_mat_raw;
+	}
+
 	cv::Mat getDepthMatConverted();
 	std::vector<UINT16> getDepthVector();
 
