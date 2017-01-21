@@ -41,9 +41,10 @@ void DepthManager::updateDepthFrame(){
 	if (FAILED(ret)) return;
     
 	// for cv::Mat
-	errorCheck(depthFrame->AccessUnderlyingBuffer(&buffer_size, reinterpret_cast<UINT16**>(&depth_mat_raw.data)));
+	//errorCheck(depthFrame->AccessUnderlyingBuffer(&buffer_size, reinterpret_cast<UINT16**>(&depth_mat_raw.data)));
 	// for cordinated mapping of color image
-	errorCheck(depthFrame->CopyFrameDataToArray(depth_vector.size(), &depth_vector[0]));
+	//errorCheck(depthFrame->CopyFrameDataToArray(depth_vector.size(), &depth_vector[0]));
+	errorCheck(depthFrame->CopyFrameDataToArray(depth_vector.size(), reinterpret_cast<UINT16*>(depth_mat_raw.data)));
 	// get time stamp of depth image
 	errorCheck(depthFrame->get_RelativeTime(&time_stamp));
 	// convert 16bit depth data to 8 bit depth data
@@ -52,9 +53,9 @@ void DepthManager::updateDepthFrame(){
 	depthFrame->Release();
 }
 
-//cv::Mat DepthManager::getDepthMatRaw() {
-//    return depth_mat_raw;
-//}
+cv::Mat DepthManager::getDepthMatRaw() {
+    return depth_mat_raw;
+}
 
 cv::Mat DepthManager::getDepthMatConverted()
 {

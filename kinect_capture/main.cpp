@@ -1,6 +1,7 @@
 #include <opencv2\opencv.hpp>
 #include <sstream>
 #include <direct.h>
+#include <vector>
 
 #include "depth_manager.h"
 #include "color_manager.h"
@@ -34,24 +35,36 @@ int main(int argc, char** argv)
 	}
 
 	int64 now_time_stamp, past_time_stamp = 0;
+	std::vector<int64> too_long_time_stamps;
+
+	std::vector<int> compression_params;
+	compression_params.push_back(CV_IMWRITE_PNG_COMPRESSION);
+	compression_params.push_back(0);
 
 	while (1) {
 		depth_manager.updateDepthFrame();
-		color_manager.updateColorFrame(depth_manager.getDepthVector());
+		color_manager.updateColorFrame(depth_manager.getDepthMatRaw());
 	    now_time_stamp = depth_manager.getTimeStamp();
-		if (now_time_stamp - past_time_stamp > 0) {
-			std::string filename = fileid + "//depth//" + std::to_string(now_time_stamp) + ".bmp";
-			cv::imwrite(filename, depth_manager.getDepthMatRaw());
-			//saveMatBinary(filename, depth_manager.getDepthMatRaw());
-			//filename = fileid + "//color//" + std::to_string(now_time_stamp) + ".png";
-			//cv::imwrite(filename, color_manager.getCoordinatedMat());
+		int64 diff_time_stamp = now_time_stamp - past_time_stamp;
+
+		if (diff_time_stamp > 0) {
+			if (diff_time_stamp > 400000) too_long_time_stamps.push_back(now_time_stamp);
+			std::string filename = fileid + "//depth//" + std::to_string(now_time_stamp) + ".png";
+			cv::imwrite(filename, depth_manager.getDepthMatRaw(), compression_params);
+			filename = fileid + "//color//" + std::to_string(now_time_stamp) + ".bmp";
+			cv::imwrite(filename, color_manager.getCoordinatedMat());
 			past_time_stamp = now_time_stamp;
 		}
 		if (isZeroMat(depth_manager.getDepthMatConverted())) break;
 		if (cv::waitKey(10) == 'q') break;
 	}
 	
-	//getchar();
+	std::ofstream ofs(fileid + "//" + fileid + ".log", std::ios::out);
+
+	for (int time_i = 0; time_i < too_long_time_stamps.size(); ++time_i) {
+		ofs << too_long_time_stamps[time_i] << std::endl;
+	}
+	ofs.close();
 
 	return 0;
 }

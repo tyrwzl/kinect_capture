@@ -74,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\takayama\Documents\opencv\opencv3.2\build\include;C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\takayama\Documents\opencv\opencv-3.2.0\build\install\include;C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\takayama\Documents\opencv\opencv3.2\build\x64\vc14\lib;C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -82,8 +82,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>C:\Users\takayama\Documents\opencv\opencv3.2\build\include;C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\takayama\Documents\opencv\opencv3.2\build\x64\vc14\lib;C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\Lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\takayama\Documents\opencv\opencv-3.2.0\build\install\include;C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\takayama\Documents\opencv\opencv-3.2.0\build\install\x64\vc14\staticlib;C:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -138,13 +138,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Kinect20.lib;opencv_world320.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Kinect20.lib;opencv_core320.lib;opencv_highgui320.lib;opencv_imgproc320.lib;libpng.lib;libjpeg.lib;libtiff.lib;zlib.lib;opencv_imgcodecs320.lib;ippicvmt.lib;libjasper.lib;IlmImf.lib;libwebp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

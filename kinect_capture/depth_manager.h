@@ -14,10 +14,7 @@ public:
 
 	void updateDepthFrame();
 
-	const cv::Mat& getDepthMatRaw() const {
-		return depth_mat_raw;
-	}
-
+	cv::Mat getDepthMatRaw();
 	cv::Mat getDepthMatConverted();
 	std::vector<UINT16> getDepthVector();
 

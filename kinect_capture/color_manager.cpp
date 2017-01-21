@@ -20,13 +20,14 @@ ColorManager::ColorManager(int depth_height, int depth_width)
 	//init member
 	color_vector.resize(color_width * color_height * color_channels);
 	color_mat_coordinated.create(depth_height, depth_width, CV_8UC4);
+	depth_size = depth_width * depth_height;
 }
 
 ColorManager::~ColorManager()
 {
 }
 
-void ColorManager::updateColorFrame(std::vector<UINT16> &depth_vector)
+void ColorManager::updateColorFrame(cv::Mat& depth_mat)
 {
 	IColorFrame* color_frame;
 	unsigned int buffer_size = color_width * color_height * color_channels *sizeof(unsigned char);
@@ -41,8 +42,8 @@ void ColorManager::updateColorFrame(std::vector<UINT16> &depth_vector)
 	ICoordinateMapper *mapper;
 	errorCheck(kinect->get_CoordinateMapper(&mapper));
 
-	std::vector<ColorSpacePoint> color_space_points(depth_vector.size());
-	errorCheck(mapper->MapDepthFrameToColorSpace(depth_vector.size(), &depth_vector[0], color_space_points.size(), &color_space_points[0]));
+	std::vector<ColorSpacePoint> color_space_points(depth_size);
+	errorCheck(mapper->MapDepthFrameToColorSpace(depth_size, reinterpret_cast<UINT16*>(depth_mat.data), color_space_points.size(), &color_space_points[0]));
 
 	for (int i = 0; i < color_mat_coordinated.total(); ++i) {
 		int x = (int)color_space_points[i].X;
@@ -51,7 +52,7 @@ void ColorManager::updateColorFrame(std::vector<UINT16> &depth_vector)
 		int src_index = ((y * color_width) + x) * color_channels;
 		int dest_index = i * color_channels;
 
-		if (isValidColorRange(x, y) && isValidDepthRange(i, depth_vector)) {
+		if (isValidColorRange(x, y) && isValidDepthRange(i, reinterpret_cast<UINT16*>(depth_mat.data))) {
 			color_mat_coordinated.data[dest_index + 0] = color_vector[src_index + 0];
 			color_mat_coordinated.data[dest_index + 1] = color_vector[src_index + 1];
 			color_mat_coordinated.data[dest_index + 2] = color_vector[src_index + 2];
@@ -90,7 +91,7 @@ bool ColorManager::isValidColorRange(int x, int y)
 	return ((0 <= x) && (x < color_width)) && ((0 <= y) && (y < color_height));
 }
 
-bool ColorManager::isValidDepthRange(int index, std::vector<UINT16> &depth_vector)
+bool ColorManager::isValidDepthRange(int index, const UINT16* depth_vector)
 {
 	return (500 <= depth_vector[index]) && (depth_vector[index] <= 8000);
 }
